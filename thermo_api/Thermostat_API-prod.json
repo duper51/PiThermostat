@@ -1,0 +1,332 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "2017-08-21T22:59:11Z",
+    "title": "Thermostat API"
+  },
+  "host": "temp-api.duper51.me",
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/link/{linkID}": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "linkID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200 response",
+            "schema": {
+              "$ref": "#/definitions/LinkResponse"
+            }
+          },
+          "404": {
+            "description": "404 response",
+            "schema": {
+              "$ref": "#/definitions/DownstreamError"
+            }
+          }
+        }
+      },
+      "post": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "linkID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200 response",
+            "schema": {
+              "$ref": "#/definitions/LinkIDResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/temperature/{deviceID}": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "deviceID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200 response",
+            "schema": {
+              "$ref": "#/definitions/DeviceConfig"
+            }
+          },
+          "404": {
+            "description": "404 response",
+            "schema": {
+              "$ref": "#/definitions/DownstreamError"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "deviceID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "DeviceConfig",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeviceConfig"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200 response",
+            "schema": {
+              "$ref": "#/definitions/Empty"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/temperature/{deviceID}/updateConfig": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "deviceID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "DeviceSettings",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeviceSettings"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "404 response",
+            "schema": {
+              "$ref": "#/definitions/DownstreamError"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/temperature/{deviceID}/updateTemp": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "deviceID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "DeviceTempConfig",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeviceTempConfig"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "404 response",
+            "schema": {
+              "$ref": "#/definitions/DownstreamError"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    }
+  },
+  "securityDefinitions": {
+    "api_key": {
+      "type": "apiKey",
+      "name": "x-api-key",
+      "in": "header"
+    }
+  },
+  "definitions": {
+    "DeviceTempConfig": {
+      "type": "object",
+      "required": [
+        "current_humid",
+        "current_temp"
+      ],
+      "properties": {
+        "current_temp": {
+          "type": "number",
+          "maximum": 85
+        },
+        "current_humid": {
+          "type": "number",
+          "maximum": 100
+        }
+      },
+      "title": "Device Settings"
+    },
+    "Empty": {
+      "type": "object",
+      "title": "Empty Schema"
+    },
+    "DeviceSettings": {
+      "type": "object",
+      "required": [
+        "temp_setting",
+        "threshold"
+      ],
+      "properties": {
+        "temp_setting": {
+          "type": "number",
+          "maximum": 85
+        },
+        "threshold": {
+          "type": "number",
+          "minimum": 1
+        }
+      },
+      "title": "Device Settings"
+    },
+    "DownstreamError": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        }
+      },
+      "title": "Error Schema"
+    },
+    "LinkIDResponse": {
+      "type": "object",
+      "required": [
+        "linkID"
+      ],
+      "properties": {
+        "linkID": {
+          "type": "string"
+        }
+      },
+      "title": "Device Settings"
+    },
+    "DeviceConfig": {
+      "type": "object",
+      "required": [
+        "current_temp",
+        "settings"
+      ],
+      "properties": {
+        "current_temp": {
+          "type": "number"
+        },
+        "current_humid": {
+          "type": "number"
+        },
+        "settings": {
+          "type": "object",
+          "properties": {
+            "temp_setting": {
+              "type": "number",
+              "maximum": 85
+            },
+            "threshold": {
+              "type": "number",
+              "minimum": 1
+            }
+          }
+        }
+      },
+      "title": "Device Config"
+    },
+    "LinkResponse": {
+      "type": "object",
+      "required": [
+        "apiKey",
+        "uuid"
+      ],
+      "properties": {
+        "apiKey": {
+          "type": "string"
+        },
+        "uuid": {
+          "type": "string"
+        }
+      },
+      "title": "Device Settings"
+    }
+  }
+}
