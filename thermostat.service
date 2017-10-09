@@ -1,0 +1,15 @@
+[Unit]
+Description=PiThermostatD - Thermostat app for raspi
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/pithermostat/thermo_client
+ExecStart=/usr/bin/python3 /opt/pithermostat/thermo_client/index.py
+StandardOutput=journal
+TimeoutStopSec=15s
+TimeoutStartSec=0
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+Alias=pithermostat.service
