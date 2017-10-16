@@ -8,7 +8,7 @@ import RPi.GPIO as GPIO
 import requests
 import configparser
 
-sense_thread = None 
+sense_thread = None
 connect_thread = None
 running = True
 config = configparser.ConfigParser()
@@ -50,15 +50,19 @@ class TempSensor:
   def __init__(self, pin):
     self.temp = None
     self.humid = None
+    self.current_rough_avg = None
     self._pin = pin
     while self.temp is None and self.humid is None:
       self._update()
 
   def _update(self):
     humidity_tmp, temp_tmp = Adafruit_DHT.read_retry(Adafruit_DHT.AM2302, self._pin)
-    if temp_tmp is not None and humidity_tmp is not None:
+    if self.current_rough_avg is not None:
+      self.current_rough_avg = temp_tmp
+    if temp_tmp is not None and humidity_tmp is not None and (abs(self.current_rough_avg - self.temp) < 2):
       self.temp = (temp_tmp * 9 / 5) + 32
       self.humid = humidity_tmp
+    self.current_rough_avg = (self.current_rough_avg + temp_tmp)/2
 
   def runner_thread(self):
     global running
@@ -69,9 +73,10 @@ class Connector:
   def __init__(self, sensor):
     self.low_temp_setting = 0
     self.high_temp_setting = 1
+    self._current_avg = None
     self._sense_obj = sensor
     self._uuid = config['settings']['uuid']
-    
+
   def get_temp(self):
     return (self.low_temp_setting, self.high_temp_setting)
 
