@@ -41,10 +41,10 @@ def main():
         GPIO.output(17, GPIO.HIGH)
       else:
         GPIO.output(17, GPIO.LOW)
-    time.sleep(1)    
+    time.sleep(1)
 
 def cleanup():
-  GPIO.cleanup()  
+  GPIO.cleanup()
 
 class TempSensor:
   def __init__(self, pin):
@@ -73,7 +73,6 @@ class Connector:
   def __init__(self, sensor):
     self.low_temp_setting = 0
     self.high_temp_setting = 1
-    self._current_avg = None
     self._sense_obj = sensor
     self._uuid = config['settings']['uuid']
 
