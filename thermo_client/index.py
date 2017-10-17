@@ -57,9 +57,9 @@ class TempSensor:
 
   def _update(self):
     humidity_tmp, temp_tmp = Adafruit_DHT.read_retry(Adafruit_DHT.AM2302, self._pin)
-    if self.current_rough_avg is not None:
+    if self.current_rough_avg is None:
       self.current_rough_avg = temp_tmp
-    if temp_tmp is not None and humidity_tmp is not None and (abs(self.current_rough_avg - self.temp) < 2):
+    if temp_tmp is not None and humidity_tmp is not None and (abs(self.current_rough_avg - temp_tmp) < 2):
       self.temp = (temp_tmp * 9 / 5) + 32
       self.humid = humidity_tmp
     self.current_rough_avg = (self.current_rough_avg + temp_tmp)/2
